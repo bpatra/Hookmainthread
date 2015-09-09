@@ -26,9 +26,7 @@ namespace BonenLawyer
             if (InboxItems != null)
             {
                 InboxItems.ItemAdd -= AddNewInboxItems;
-            }
-           
-        }
+            }        }
 
         public void Initialize()
         {
@@ -38,8 +36,6 @@ namespace BonenLawyer
                     .Items;
             InboxItems.ItemAdd += AddNewInboxItems;
         }
-
-      
 
         private void AddNewInboxItems(object item)
         {

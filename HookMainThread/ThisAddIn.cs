@@ -38,6 +38,7 @@ namespace BonenLawyer
             MissingType = System.Type.Missing;
             Log.InitLog(@"D:/hookeditem.log");
             Log.Info("*******START Addin*********");
+            Log.Info("Main thread VSTA is {0} {1}", Thread.CurrentThread.Name, Thread.CurrentThread.ManagedThreadId);
             HookedItemsCallbacks callbacks = new HookedItemsCallbacks();
             HookedFolderItems = new HookedFolderItems(callbacks);
             HookedFolderItems.Initialize();
