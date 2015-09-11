@@ -25,7 +25,7 @@ namespace BonenLawyer
         //TODO: review the way we handle Singletons: HookedFolderItems, TopLevelAcceptableMailFolderCache ,WebStatus etc.
         public static object MissingType = null; //use this instead of direct Type.Missing to allow unit testing.
         public HookedFolderItems HookedFolderItems; //maintain a global ref to the object to avoid GC and then loose the event hooking
-
+        public TaskScheduler TaskScheduler;
 
         private void ThisAddIn_Startup(object sender, System.EventArgs e)
         {
@@ -36,6 +36,9 @@ namespace BonenLawyer
         private void InitializeAddin()
         {
             MissingType = System.Type.Missing;
+            SynchronizationContext windowsFormsSynchronizationContext = new WindowsFormsSynchronizationContext();
+            SynchronizationContext.SetSynchronizationContext(windowsFormsSynchronizationContext);
+            TaskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
             Log.InitLog(@"D:/hookeditem.log");
             Log.Info("*******START Addin*********");
             Log.Info("Main thread VSTA is {0} {1}", Thread.CurrentThread.Name, Thread.CurrentThread.ManagedThreadId);

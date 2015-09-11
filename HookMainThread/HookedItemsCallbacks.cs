@@ -13,21 +13,25 @@ namespace BonenLawyer
     public class HookedItemsCallbacks
     {
 
-        public async void TryProcessInboxMailAsync(MailItem mailItem)
+        public void TryProcessInboxMailAsync(MailItem mailItem)
         {
             string subject = mailItem.Subject;
             Log.Info("Start hook processing in {0} {1}", Thread.CurrentThread.Name, Thread.CurrentThread.ManagedThreadId);
-            var results = await GetMattersAsync(subject);
-            Log.Info("Finishing in {0} {1}", Thread.CurrentThread.Name, Thread.CurrentThread.ManagedThreadId);
-            foreach (var result in results)
+            var results = GetMattersAsync(subject);
+            results.ContinueWith((tsk) =>
             {
-                Log.Info("found result {0}", result);
-            }
+                Log.Info("Finishing in {0} {1}", Thread.CurrentThread.Name, Thread.CurrentThread.ManagedThreadId);
+                foreach (var result in tsk.Result)
+                {
+                    Log.Info("found result {0}", result);
+                }
+            },Globals.ThisAddIn.TaskScheduler);
+
         }
 
-        private async Task<List<string>> GetMattersAsync(string subject)
+        private Task<List<string>> GetMattersAsync(string subject)
         {
-            return await Task.Run( () =>
+            return Task.Factory.StartNew( () =>
             {
                 Log.Info("CPU intensive job in {0} {1}", Thread.CurrentThread.Name, Thread.CurrentThread.ManagedThreadId);
                 Thread.Sleep(TimeSpan.FromSeconds(20));
